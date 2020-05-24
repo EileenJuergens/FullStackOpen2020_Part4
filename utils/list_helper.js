@@ -48,9 +48,29 @@ const mostBlogs = (blogs) => {
 };
 
 
+const mostLikes = (blogs) => {
+  const authors = [];
+  blogs.map((blog) => authors.push(blog.author));
+  const allAuthors = Array.from(new Set(authors));
+
+  const authorsLikes = [];
+  allAuthors.map((author, i) => {
+    const allBlogsFromOneAuthor = blogs.filter((blog) => blog.author === allAuthors[i]);
+    const amount = totalLikes(allBlogsFromOneAuthor);
+    authorsLikes.push({ author, likes: amount });
+  });
+
+  const maxValue = Math.max(...authorsLikes.map((author) => author.likes));
+  const authorWithMostLikes = authorsLikes.filter((obj) => obj.likes === maxValue);
+
+  return authorWithMostLikes[0];
+};
+
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
