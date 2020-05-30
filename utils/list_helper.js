@@ -6,20 +6,13 @@ const dummy = (blogs) => (
 
 
 const totalLikes = (blogs) => {
-  if (blogs.length === 0) {
-    return 0;
-  }
+  let number;
 
-  if (blogs.length === 1) {
-    return blogs[0].likes;
-  }
+  if (blogs.length === 0) number = 0;
+  if (blogs.length === 1) number = blogs[0].likes;
+  if (blogs.length > 1) number = blogs.reduce((acc, curr) => acc + curr.likes, 0);
 
-  if (blogs.length > 1) {
-    const initialValue = 0;
-    return blogs.reduce((acc, curr) => {
-      return acc + curr.likes;
-    }, initialValue);
-  }
+  return number;
 };
 
 
@@ -31,14 +24,12 @@ const favoriteBlog = (blogs) => {
 
 
 const mostBlogs = (blogs) => {
-  const authors = [];
-  blogs.map((blog) => authors.push(blog.author));
+  const authors = blogs.map((blog) => blog.author);
   const allAuthors = Array.from(new Set(authors));
 
-  const authorsBlogs = [];
-  allAuthors.map((author, i) => {
-    const counter = blogs.filter((blog) => blog.author === allAuthors[i]).length;
-    authorsBlogs.push({ author, blogs: counter });
+  const authorsBlogs = allAuthors.map((author) => {
+    const counter = blogs.filter((blog) => blog.author === author).length;
+    return { author, blogs: counter };
   });
 
   const maxValue = Math.max(...authorsBlogs.map((author) => author.blogs));
@@ -49,15 +40,13 @@ const mostBlogs = (blogs) => {
 
 
 const mostLikes = (blogs) => {
-  const authors = [];
-  blogs.map((blog) => authors.push(blog.author));
+  const authors = blogs.map((blog) => blog.author);
   const allAuthors = Array.from(new Set(authors));
 
-  const authorsLikes = [];
-  allAuthors.map((author, i) => {
-    const allBlogsFromOneAuthor = blogs.filter((blog) => blog.author === allAuthors[i]);
+  const authorsLikes = allAuthors.map((author) => {
+    const allBlogsFromOneAuthor = blogs.filter((blog) => blog.author === author);
     const amount = totalLikes(allBlogsFromOneAuthor);
-    authorsLikes.push({ author, likes: amount });
+    return { author, likes: amount };
   });
 
   const maxValue = Math.max(...authorsLikes.map((author) => author.likes));
