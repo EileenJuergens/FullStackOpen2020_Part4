@@ -124,7 +124,6 @@ describe('most likes', () => {
     likes: 17,
   };
 
-
   test('returns the author with the largest amount of likes', () => {
     const result = listHelper.mostLikes(listWithMultipleBlogs);
     expect(result).toEqual(author);
