@@ -49,8 +49,8 @@ test('the unique identifier of each blog is names "id"', async () => {
 
 test('a new blog is added successfully', async () => {
   const newBlog = {
-    title: 'Test blog title',
-    author: 'Test author',
+    title: 'Test blog title 1',
+    author: 'Test author 1',
     url: 'https://www.test.com',
     likes: 3,
   };
@@ -65,7 +65,25 @@ test('a new blog is added successfully', async () => {
   expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1);
 
   const titles = blogsAtEnd.map((blog) => blog.title);
-  expect(titles).toContain('Test blog title');
+  expect(titles).toContain('Test blog title 1');
+});
+
+
+test('if the likes property is missing, the default value should be 0', async () => {
+  const newBlog = {
+    title: 'Test blog title 2',
+    author: 'Test author 2',
+    url: 'https://www.test.com',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const blog = await Blog.findOne({ title: 'Test blog title 2' });
+  expect(blog.likes).toBe(0);
 });
 
 
