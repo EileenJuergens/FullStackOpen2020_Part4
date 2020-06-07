@@ -87,6 +87,19 @@ test('if the likes property is missing, the default value should be 0', async ()
 });
 
 
+test('if the author or title property is missing, the respond should be 400 Bad Request', async () => {
+  const newBlog = {
+    url: 'https://www.test.com',
+    likes: 3,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
+
 afterAll(() => {
   mongoose.connection.close();
 });
