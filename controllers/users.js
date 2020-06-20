@@ -9,18 +9,28 @@ usersRouter.get('/', async (request, response) => {
 });
 
 usersRouter.post('/', async (request, response) => {
+  const { body } = request;
   const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(request.body.password, saltRounds);
+  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+  const users = await User.find({});
+  const userNameAlreadyInUse = users.some((user) => user.username === body.username);
 
-  const user = new User({
-    username: request.body.username,
-    name: request.body.name,
-    passwordHash,
-  });
+  if (!body.username || !body.password || body.username.length <= 3 || body.password.length <= 3
+    || userNameAlreadyInUse) {
+    response.status(400);
+    response.json({ error: 'invalid login data' });
+    response.end();
+  } else {
+    const user = new User({
+      username: body.username,
+      name: body.name,
+      passwordHash,
+    });
 
-  const savedUser = await user.save();
-  response.status(200);
-  response.json(savedUser);
+    const savedUser = await user.save();
+    response.status(200);
+    response.json(savedUser);
+  }
 });
 
 

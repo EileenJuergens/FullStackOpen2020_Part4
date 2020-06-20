@@ -1,4 +1,5 @@
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const initialBlogs = [
   {
@@ -38,9 +39,41 @@ const initialBlogs = [
   },
 ];
 
+
+const initialUsers = [
+  {
+    blogs: [],
+    username: 'EJ333',
+    name: 'Eileen Juergens',
+    id: '5eee3b79757e6f251ef73f04',
+  },
+  {
+    blogs: [],
+    username: 'HP_222',
+    name: 'Harry Potter',
+    id: '5eee40ba9621dc266c190637',
+  },
+  {
+    blogs: [],
+    username: 'RW_1234',
+    name: 'Ron Weasly',
+    id: '5eee41279621dc266c190638',
+  },
+];
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs;
 };
 
-module.exports = { initialBlogs, blogsInDb };
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users;
+};
+
+module.exports = {
+  initialBlogs,
+  initialUsers,
+  blogsInDb,
+  usersInDb,
+};
