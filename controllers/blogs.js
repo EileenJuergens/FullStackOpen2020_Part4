@@ -1,6 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
-
+const User = require('../models/user');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
@@ -9,24 +10,31 @@ blogsRouter.get('/', async (request, response) => {
 
 
 blogsRouter.post('/', async (request, response, next) => {
-  if (request.body.title === undefined || request.body.author === undefined) {
+  if (!request.body.title || !request.body.author) {
     response.status(400);
     response.json({ error: 'title and / or author missing' });
     response.end();
   } else {
     try {
+      const users = await User.find({});
+      const randomIndex = Math.floor(Math.random() * users.length);
+      const user = users[randomIndex];
+
       const blog = new Blog({
+        url: request.body.url,
         title: request.body.title,
         author: request.body.author,
-        url: request.body.url,
+        user: user._id,
         likes: request.body.likes || 0,
       });
 
       const savedBlog = await blog.save();
-      response.status(200);
+      user.blogs = user.blogs.concat(savedBlog._id);
+      await user.save();
+      response.status(201);
       response.json(savedBlog);
-    } catch (exception) {
-      next(exception);
+    } catch (error) {
+      next(error);
     }
   }
 });

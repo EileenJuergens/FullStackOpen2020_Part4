@@ -5,21 +5,21 @@ const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 
 const blogSchema = new mongoose.Schema({
+  url: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
     minlength: 5,
   },
   author: String,
-  url: {
-    type: String,
-    required: true,
-  },
-  likes: Number,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  likes: Number,
 });
 
 blogSchema.set('toJSON', {
